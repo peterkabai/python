@@ -64,11 +64,27 @@ while loop:
         if ai_x+paddle_w < width and ball_pos[0]+ball_diam/2 > ai_x+paddle_w/2:
             ai_x += ai_speed
             
-    # move the ball
+    # bounce ball off sides
     if ball_pos[0]+ball_diam >= width or ball_pos[0] <= 0:
         ball_speed_x = (-ball_speed_x)
-    if ball_pos[1]+ball_diam >= height or ball_pos[1] <= 0:
+    
+    # bounce off player
+    if ball_pos[1]+ball_diam > height-paddle_h and ball_pos[0] < player_x+paddle_w and ball_pos[0]+ball_diam>player_x:
         ball_speed_y = (-ball_speed_y)
+    
+    # bounce off ai
+    if ball_pos[1] < paddle_h and ball_pos[0] < ai_x+paddle_w and ball_pos[0]+ball_diam>ai_x:
+        ball_speed_y = (-ball_speed_y)
+    
+    # ball touches top or bottom
+    if ball_pos[1]+ball_diam >= height:
+        ball_speed_y = (-ball_speed_y)
+        print("Score AI")
+    if ball_pos[1] <= 0:
+        ball_speed_y = (-ball_speed_y)
+        print("Score Player")
+        
+    # move ball
     ball_pos[0]+=ball_speed_x
     ball_pos[1]+=ball_speed_y
     
