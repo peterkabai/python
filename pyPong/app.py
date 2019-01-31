@@ -3,7 +3,8 @@ pygame.init()
 
 # set sizes
 size = width, height = 500,700 
-paddleH, paddleW = 10, 100
+paddle_h, paddle_w = 10, 100
+ball_diam = 20
 
 # create window, set the title and the app icon
 screen = pygame.display.set_mode(size)
@@ -15,9 +16,11 @@ pygame.display.set_caption("pyPong")
 ballPos = [20,20]
 white = [255,255,255]
 red = [255,0,0]
-playerX = width/2-paddleW/2
-computerX = width/2-paddleW/2
+player_x = width/2-paddle_w/2
+computer_x = width/2-paddle_w/2
 player_speed = 4
+ball_speed_x = 4
+ball_speed_y = 4
 
 clock = pygame.time.Clock()
 pygame.key.set_repeat(1, 5)
@@ -40,11 +43,11 @@ while loop:
         
         # moves the paddle
         if key_pressed[pygame.K_LEFT]:
-            if playerX > 0:
-                playerX-=player_speed
+            if player_x > 0:
+                player_x-=player_speed
         if key_pressed[pygame.K_RIGHT]:
-            if playerX+paddleW < width:
-                playerX+=player_speed
+            if player_x+paddle_w < width:
+                player_x+=player_speed
         
         # quits the game
         if key_pressed[pygame.K_ESCAPE]:
@@ -52,11 +55,21 @@ while loop:
         
         clock.tick(60)
     
+    # move the ball
+    if ballPos[0]+ball_diam >= width or ballPos[0] <= 0:
+        ball_speed_x = (-ball_speed_x)
+    
+    if ballPos[1]+ball_diam >= height or ballPos[1] <= 0:
+        ball_speed_y = (-ball_speed_y)
+        
+    ballPos[0]+=ball_speed_x
+    ballPos[1]+=ball_speed_y
+    
     # paint the background image, ball and paddles
     screen.blit(background, (0,0))
+    screen.blit(paddle, (computer_x,0))
+    screen.blit(paddle, (player_x,height-paddle_h))
     screen.blit(ball, ballPos)
-    screen.blit(paddle, (computerX,0))
-    screen.blit(paddle, (playerX,height-paddleH))
     
     # refresh the screen
     pygame.display.flip()
