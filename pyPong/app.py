@@ -1,4 +1,5 @@
 import sys, pygame, time
+from datetime import datetime, timedelta
 pygame.init()
 
 # set sizes
@@ -26,6 +27,9 @@ ai_diff = 50
 
 clock = pygame.time.Clock()
 pygame.key.set_repeat(1, 5)
+ball_moving = True
+paused_at = 0
+paused_for = 3
 
 # set images
 background = pygame.image.load("resources/background.png")
@@ -57,6 +61,11 @@ while loop:
         
         clock.tick(60)
     
+    # restarts the ball after a score
+    if not ball_moving:
+        if datetime.now() > paused_at+timedelta(seconds=paused_for):
+            ball_moving = True
+    
     # moves the ai
     if ball_pos[1]+ball_diam/2 < height/100*ai_diff:
         if ai_x > 0 and ball_pos[0]+ball_diam/2 < ai_x+paddle_w/2:
@@ -78,15 +87,23 @@ while loop:
     
     # ball touches top or bottom
     if ball_pos[1]+ball_diam >= height:
-        ball_speed_y = (-ball_speed_y)
+        ball_pos[0] = width/2-ball_diam/2
+        ball_pos[1] = height/2-ball_diam/2
+        ball_moving = False
+        paused_at = datetime.now()
         print("Score AI")
     if ball_pos[1] <= 0:
         ball_speed_y = (-ball_speed_y)
+        ball_pos[0] = width/2-ball_diam/2
+        ball_pos[1] = height/2-ball_diam/2
+        ball_moving = False
+        paused_at = datetime.now()
         print("Score Player")
         
     # move ball
-    ball_pos[0]+=ball_speed_x
-    ball_pos[1]+=ball_speed_y
+    if ball_moving:
+        ball_pos[0]+=ball_speed_x
+        ball_pos[1]+=ball_speed_y
     
     # paint the background image, ball and paddles
     screen.blit(background, (0,0))
