@@ -12,15 +12,17 @@ icon = pygame.image.load("resources/ball.png")
 pygame.display.set_icon(icon)
 pygame.display.set_caption("pyPong")
 
-# create various arrays for positions and colors
-ballPos = [20,20]
-white = [255,255,255]
-red = [255,0,0]
+# create various positions
+ball_pos = [20,20]
 player_x = width/2-paddle_w/2
-computer_x = width/2-paddle_w/2
+ai_x = width/2-paddle_w/2
+
+# game settings
 player_speed = 4
 ball_speed_x = 4
 ball_speed_y = 4
+ai_speed = 4
+ai_diff = 50
 
 clock = pygame.time.Clock()
 pygame.key.set_repeat(1, 5)
@@ -55,21 +57,26 @@ while loop:
         
         clock.tick(60)
     
+    # moves the ai
+    if ball_pos[1]+ball_diam/2 < height/100*ai_diff:
+        if ai_x > 0 and ball_pos[0]+ball_diam/2 < ai_x+paddle_w/2:
+            ai_x -= ai_speed
+        if ai_x+paddle_w < width and ball_pos[0]+ball_diam/2 > ai_x+paddle_w/2:
+            ai_x += ai_speed
+            
     # move the ball
-    if ballPos[0]+ball_diam >= width or ballPos[0] <= 0:
+    if ball_pos[0]+ball_diam >= width or ball_pos[0] <= 0:
         ball_speed_x = (-ball_speed_x)
-    
-    if ballPos[1]+ball_diam >= height or ballPos[1] <= 0:
+    if ball_pos[1]+ball_diam >= height or ball_pos[1] <= 0:
         ball_speed_y = (-ball_speed_y)
-        
-    ballPos[0]+=ball_speed_x
-    ballPos[1]+=ball_speed_y
+    ball_pos[0]+=ball_speed_x
+    ball_pos[1]+=ball_speed_y
     
     # paint the background image, ball and paddles
     screen.blit(background, (0,0))
-    screen.blit(paddle, (computer_x,0))
+    screen.blit(paddle, (ai_x,0))
     screen.blit(paddle, (player_x,height-paddle_h))
-    screen.blit(ball, ballPos)
+    screen.blit(ball, ball_pos)
     
     # refresh the screen
     pygame.display.flip()
