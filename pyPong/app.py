@@ -17,6 +17,7 @@ white = [255,255,255]
 red = [255,0,0]
 playerX = width/2-paddleW/2
 computerX = width/2-paddleW/2
+player_speed = 4
 
 clock = pygame.time.Clock()
 pygame.key.set_repeat(1, 5)
@@ -39,9 +40,11 @@ while loop:
         
         # moves the paddle
         if key_pressed[pygame.K_LEFT]:
-            playerX-=4
+            if playerX > 0:
+                playerX-=player_speed
         if key_pressed[pygame.K_RIGHT]:
-            playerX+=4
+            if playerX+paddleW < width:
+                playerX+=player_speed
         
         # quits the game
         if key_pressed[pygame.K_ESCAPE]:
