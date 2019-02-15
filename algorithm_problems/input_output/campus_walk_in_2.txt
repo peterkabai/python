@@ -1,0 +1,35 @@
+East Campus
+VPA Building
+9
+Pool
+Library
+Gym
+BIT
+Construction Site
+Student Center
+East Campus
+VPA Building
+Otter Express
+9 22
+0 2
+0 4
+1 3
+1 4
+2 0
+2 8
+3 4
+3 1
+3 8
+3 5
+4 3
+4 1
+4 0
+5 8
+5 3
+6 7
+7 6
+7 8
+8 5
+8 3
+8 2
+8 7
