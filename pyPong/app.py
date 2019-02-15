@@ -1,9 +1,12 @@
-import sys, pygame, time
+import pygame.locals
 from datetime import datetime, timedelta
 pygame.init()
 
+my_font = pygame.font.SysFont('Comic Sans MS', 30)
+player_text = my_font.render('Score:', False, (0, 0, 0))
+
 # set sizes
-size = width, height = 500,700 
+size = width, height = 500, 700
 paddle_h, paddle_w = 10, 100
 ball_diam = 20
 
@@ -14,7 +17,7 @@ pygame.display.set_icon(icon)
 pygame.display.set_caption("pyPong")
 
 # create various positions
-ball_pos = [20,20]
+ball_pos = [20, 20]
 player_x = width/2-paddle_w/2
 ai_x = width/2-paddle_w/2
 
@@ -23,13 +26,14 @@ player_speed = 4
 ball_speed_x = 4
 ball_speed_y = 4
 ai_speed = 4
-ai_diff = 50
+ai_diff = 25
 
 clock = pygame.time.Clock()
 pygame.key.set_repeat(1, 5)
 ball_moving = True
 paused_at = 0
 paused_for = 3
+score = [0, 0]
 
 # set images
 background = pygame.image.load("resources/background.png")
@@ -50,10 +54,10 @@ while loop:
         # moves the paddle
         if key_pressed[pygame.K_LEFT]:
             if player_x > 0:
-                player_x-=player_speed
+                player_x -= player_speed
         if key_pressed[pygame.K_RIGHT]:
             if player_x+paddle_w < width:
-                player_x+=player_speed
+                player_x += player_speed
         
         # quits the game
         if key_pressed[pygame.K_ESCAPE]:
@@ -68,7 +72,7 @@ while loop:
     
     # moves the ai
     if ball_pos[1]+ball_diam/2 < height/100*ai_diff:
-        if ai_x > 0 and ball_pos[0]+ball_diam/2 < ai_x+paddle_w/2:
+        if ai_x > 0 and ball_pos[0]+ball_diam/2 < ai_x + paddle_w/2:
             ai_x -= ai_speed
         if ai_x+paddle_w < width and ball_pos[0]+ball_diam/2 > ai_x+paddle_w/2:
             ai_x += ai_speed
@@ -78,12 +82,14 @@ while loop:
         ball_speed_x = (-ball_speed_x)
     
     # bounce off player
-    if ball_pos[1]+ball_diam > height-paddle_h and ball_pos[0] < player_x+paddle_w and ball_pos[0]+ball_diam>player_x:
+    if ball_pos[1] + ball_diam > height-paddle_h and \
+            ball_pos[0] < player_x + paddle_w and \
+            ball_pos[0]+ball_diam > player_x:
         ball_speed_y = (-ball_speed_y)
     
     # bounce off ai
-    if ball_pos[1] < paddle_h and ball_pos[0] < ai_x+paddle_w and ball_pos[0]+ball_diam>ai_x:
-        ball_speed_y = (-ball_speed_y)
+    if ball_pos[1] < paddle_h and ball_pos[0] < ai_x + paddle_w and ball_pos[0] + ball_diam > ai_x:
+        ball_speed_y = -ball_speed_y
     
     # ball touches top or bottom
     if ball_pos[1]+ball_diam >= height:
@@ -91,6 +97,7 @@ while loop:
         ball_pos[1] = height/2-ball_diam/2
         ball_moving = False
         paused_at = datetime.now()
+        score[1] += 1
         print("Score AI")
     if ball_pos[1] <= 0:
         ball_speed_y = (-ball_speed_y)
@@ -98,19 +105,21 @@ while loop:
         ball_pos[1] = height/2-ball_diam/2
         ball_moving = False
         paused_at = datetime.now()
+        score[0] += 1
         print("Score Player")
         
     # move ball
     if ball_moving:
-        ball_pos[0]+=ball_speed_x
-        ball_pos[1]+=ball_speed_y
+        ball_pos[0] += ball_speed_x
+        ball_pos[1] += ball_speed_y
     
     # paint the background image, ball and paddles
-    screen.blit(background, (0,0))
-    screen.blit(paddle, (ai_x,0))
-    screen.blit(paddle, (player_x,height-paddle_h))
+    screen.blit(background, (0, 0))
+    screen.blit(paddle, (ai_x, 0))
+    screen.blit(paddle, (player_x, height-paddle_h))
+    screen.blit(player_text, (0, 0))
     screen.blit(ball, ball_pos)
-    
+
     # refresh the screen
     pygame.display.flip()
 
