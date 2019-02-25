@@ -108,7 +108,7 @@ def num_nodes_in_lookup(num):
 
 line_num = 1
 
-for line in fileinput.input(["completeTrees.txt"]):
+for line in fileinput.input(["input_output/complete_trees_in_0.txt"]):
 
     num_elements = -1
 
@@ -121,9 +121,7 @@ for line in fileinput.input(["completeTrees.txt"]):
         print(values)
         root = Node(num_elements)
         root = from_array(values, root, 0, num_elements)
-        # root = Node(num_elements)
-        # for value in val:
-        #     root.insert(int(value))
+
         print(root)
         print_tree(root)
 

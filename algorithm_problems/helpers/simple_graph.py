@@ -72,7 +72,6 @@ def add_to_graph(from_node, to_node, all_nodes, graph=None):
         graph[all_nodes[from_node]].append(all_nodes[to_node])
     else:
         graph[all_nodes[from_node]] = [all_nodes[to_node]]
-
     return graph
 
 
@@ -83,6 +82,8 @@ def add_to_graph_values(from_node, to_node, graph=None):
         graph[from_node].append(to_node)
     else:
         graph[from_node] = [to_node]
+    if to_node not in graph:
+        graph[to_node] = []
     return graph
 
 
@@ -94,7 +95,7 @@ def print_graph(graph):
 
 def print_header(text):
     print("\n" + text)
-
+    
 
 def add_edge_pairs(edges, all_nodes, graph=None):
     if graph is None:
@@ -105,9 +106,14 @@ def add_edge_pairs(edges, all_nodes, graph=None):
         to_node = edges[i + 1]
         add_to_graph(from_node, to_node, all_nodes, graph)
         i += 2
+    
+    for node in all_nodes:
+        if node not in list(graph.keys()):
+            graph[node] = []
+            
     return graph
-
-
+    
+    
 def visit_all(graph, all_nodes):
     if len(all_nodes) == 1:
         return [[all_nodes[0]]]
@@ -136,8 +142,7 @@ def get_all_nodes(graph):
     keys = graph.keys()
     for key in keys:
         all_nodes.append(key)
-        all_nodes.extend(graph[key])
-    return list(set(all_nodes))
+    return all_nodes
 
 
 def get_num_clusters(graph):

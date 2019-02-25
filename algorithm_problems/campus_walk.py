@@ -34,14 +34,7 @@ for line in fileinput.input(["campus_walk_in_2.txt"]):
 
     line_num += 1
 
-
-# print(places)
-# print(edge_pairs)
-
 graph_def = add_edge_pairs(edge_pairs, places, {})
-# print_graph(graph_def)
-
-
 longest = find_longest_path(graph_def, from_place, to_place)
-# print(longest)
+
 print(len(longest)-1)

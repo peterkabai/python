@@ -1,6 +1,18 @@
 #! /usr/bin/python3
 
-import fileinput
+graph_def = {
+    'A': [],
+    'B': [],
+    'C': ['D'],
+    'D': ['B'],
+    'E': ['A','B'],
+    'F': ['A','C']
+}
+
+def print_dict(d):
+    keys = d.keys()
+    for key in keys:
+        print(key + " = " + str(d[key]))
 
 def get_in_degrees(graph):
   degrees = []
@@ -22,6 +34,40 @@ def get_in_degrees(graph):
   
   return(degrees)
 
+def khan_topo(graph):
+    ordering = []
+  
+    # count the in-degree each node
+    nodes = graph.keys()
+    degrees = get_in_degrees(graph)
+    
+    # create a queue of nodes with in-degree 0
+    queue_of_zero = []
+    for index, item in enumerate(nodes):
+        if degrees[index] == 0:
+            queue_of_zero.append(item)
+
+    # while the queue is not empty
+    while len(queue_of_zero) > 0:
+        
+        # add the first element in the queue to the ordering
+        ordering.append(queue_of_zero[0])
+        
+        # decrement the in-degree of each of the first element’s neighbors.
+        for neighbors in graph[queue_of_zero[0]]:
+            for index, item in enumerate(nodes):
+                if item == neighbors:
+                    degrees[index] = degrees[index]-1
+                    
+                    # add any neighbors that now have in-degree 0 to the queue.
+                    if degrees[index] == 0:
+                        queue_of_zero.append(item)
+        
+        # remove the first element from the queue.
+        del queue_of_zero[0]
+    
+    return ordering
+  
 def get_all_nodes(graph):
     all_nodes = []
     keys = graph.keys()
@@ -77,61 +123,5 @@ def khan_topo_all(graph):
         visited.append(False)
         
     return khan_topo_all_util(visited, degrees, [], graph, nodes)
-
-def add_edge_pairs(edges, all_nodes, graph=None):
-    if graph is None:
-        graph = {}
-    i = 0
-    while i < len(edges)-1:
-        from_node = edges[i]
-        to_node = edges[i + 1]
-        add_to_graph(from_node, to_node, all_nodes, graph)
-        i += 2
-    
-    for node in all_nodes:
-        if node not in list(graph.keys()):
-            graph[node] = []
-            
-    return graph
-
-def add_to_graph(from_node, to_node, all_nodes, graph=None):
-    if graph is None:
-        graph = {}
-    if all_nodes[from_node] in graph:
-        graph[all_nodes[from_node]].append(all_nodes[to_node])
-    else:
-        graph[all_nodes[from_node]] = [all_nodes[to_node]]
-    return graph
-
-line_num = 0
-places = []
-num_cities = None
-edge_pairs = []
-
-for line in fileinput.input():
-    
-    line = line.rstrip("\n")
-    
-    if line_num == 0:
-        num_cities = int(line)
-        
-    elif line_num <= num_cities:
-        places.append(line)
-
-    elif line_num > num_cities + 1:
-        edge_pairs.append(int(line.split(" ")[0]))
-        edge_pairs.append(int(line.split(" ")[1]))
-
-    line_num += 1
-
-graph_def = add_edge_pairs(edge_pairs, places, {})
-
-all_topos = khan_topo_all(graph_def)
-
-list_of_lists = []
-for topo in all_topos:
-    list_of_lists.append(', '.join(map(str, topo)))
-    
-list_of_lists.sort()
-for l in list_of_lists:
-    print(l)
+          
+print(khan_topo_all(graph_def))
