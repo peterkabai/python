@@ -7,12 +7,18 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
+# creates the app, and sets the static path
 app = Flask(__name__, static_url_path='/static')
+
+# this helps avoid caching images of plots
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
+# reads the data from the CSV
 dat = pd.read_csv("cpu.csv")
 
-def build_options(features, feat=None):
+# creates a select element, with an option for each numeric feature in the CSV
+def build_options(feat=None):
+    features = list(dat.columns.values)
     options = "<select form=\"form\", name=\"feat\">"
     for feature in features:
         if type(dat[feature][0]) is not str:
@@ -23,22 +29,20 @@ def build_options(features, feat=None):
     options += "<select>"
     return options
     
+# the function to run for the root URL
 @app.route('/')
 def on_load():
     
-    # get all column names
-    features = list(dat.columns.values)
-    options = build_options(features)
-        
     # render the page
-    html = render_template('initial.html', select=options)
+    html = render_template('initial.html', select=build_options())
     return html
 
+# the function to run when the root URL gets a POST
 @app.route('/', methods=['POST'])
 def after_post():
+    
+    # gets the selected feature from post
     feat = request.form['feat']
-    features = list(dat.columns.values)
-    options = build_options(features, feat)
     
     # create the plot
     plt.figure(1)
@@ -48,5 +52,7 @@ def after_post():
     plt.savefig(image_path)
     plt.close()
     
-    html = render_template('main.html', select=options)
+    # render the page
+    html = render_template('main.html', select=build_options(feat))
     return html
+    
