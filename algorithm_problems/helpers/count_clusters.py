@@ -4,10 +4,8 @@ def bfs(graph, start):
        
     # add the starting point to the queue and
     # the array of visited nodes
-    queue = []
-    visited = []
-    queue.append(start)
-    visited.append(start)
+    queue = [start]
+    visited = [start]
     
     # untill the queue of nodes is empty
     while queue:
@@ -70,6 +68,16 @@ def bfs_clusters(graph, start=None, visited=None, clusters=None):
     
     return clusters
 
+def dfs(graph, start, visited=None):
+    if visited is None:
+        visited = []
+    visited.append(start)
+    for n in graph[start]:
+        if n not in visited:
+            dfs(graph, n, visited)
+    return visited
+        
+        
 graph = {
     'A': ['B', 'C'],
     'B': ['A','C', 'D'],
@@ -84,5 +92,6 @@ graph = {
     'S': ['T'],
     'L': []
 }
-
+bfs(graph, "A")
+print(dfs(graph, "A"))
 print(bfs_clusters(graph))
