@@ -1,8 +1,10 @@
-# run with command: FLASK_APP=app.py; flask run
+# run with command: FLASK_APP=app.py; export FLASK_ENV=development; python -m flask run
 
 from flask import Flask, request, render_template
 
 import pandas as pd
+import matplotlib
+matplotlib.use('PS') 
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
@@ -40,12 +42,10 @@ def on_load():
 # the function to run when the root URL gets a POST
 @app.route('/', methods=['POST'])
 def after_post():
-    
     # gets the selected feature from post
     feat = request.form['feat']
     
     # create the plot
-    plt.figure(1)
     image_path = 'static/plot.png'
     plt.hist(dat[feat])
     plt.title("Histogram of " + feat)
