@@ -3,6 +3,8 @@
 from flask import Flask, request, render_template
 
 import pandas as pd
+import matplotlib
+matplotlib.use('PS') 
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
@@ -91,7 +93,7 @@ def after_post():
     image_path = 'static/plot.png'
     plt.figure(1)
     mask = (dat["year_month"] >= bottom) & (dat["year_month"] <= top)
-    dat.loc[mask, "year_month"].value_counts().sort_index().plot(kind="line", color="red")
+    dat.loc[mask, "year_month"].value_counts().sort_index().plot(kind="bar", color="red")
     plt.title("Crashes Per Month")
     plt.grid(color='gray', linestyle='-', linewidth=1)
     
