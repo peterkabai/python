@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html ng-app="selectDemo">
+
+  <head>
+    <meta charset="utf-8" />
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://rawgit.com/ahmohamed/typeahead-multiselect/master/typeahead-multiselect.min.css" />
+  	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+	<script type="text/javascript" src="https://rawgit.com/ahmohamed/typeahead-multiselect/master/typeahead-multiselect.min.js"></script>
+	
+	
+  </head>
+
+  <body>
+  	<script>
+  		var language = new Bloodhound({
+  		  datumTokenizer: Bloodhound.tokenizers.whitespace,
+  		  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  		  local: ["English", "Arabic", "Japanese"]
+  		});
+
+  		$('#typeaheadmulti .typeahead').typeaheadmulti({
+  		  hint: true,
+  		  highlight: true,
+  		  minLength: 1
+  		},
+  		{
+  		  name: 'language',
+  		  source: language
+  		});
+  		</script>
+  
+ <div id="typeaheadmulti">
+   <input class="typeahead" type="text" placeholder="Search Languages">
+ </div>
+  
+  </body>
+
+</html>
