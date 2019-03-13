@@ -68,6 +68,9 @@ def khan_topo(graph):
     
     return ordering
   
+def khan_topo_cycle(graph):
+    return len(get_all_nodes(graph)) != len(khan_topo(graph))
+    
 def get_all_nodes(graph):
     all_nodes = []
     keys = graph.keys()
@@ -124,4 +127,6 @@ def khan_topo_all(graph):
         
     return khan_topo_all_util(visited, degrees, [], graph, nodes)
           
-print(khan_topo_all(graph_def))
+# print(khan_topo_all(graph_def))
+# print(khan_topo(graph_def))
+# print(khan_topo_cycle(graph_def))
