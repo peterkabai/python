@@ -68,52 +68,84 @@ def level_order_util(node, level):
     elif level > 1 : 
         level_order_util(node.left, level-1) 
         level_order_util(node.right, level-1)    
-   
-# Find the node that will replace the node to be removed     
-def find_delete_replacement(node, first_itteration=True, left=False):
-    if first_itteration is True:
-        if node.left is not None:
-            return find_delete_replacement(node.left, first_itteration=False, left=True)
-    elif left:
-        if node.right is None:
-            return node
-        else:
-            return find_delete_replacement(node.right, first_itteration=False, left=True)
-    elif not left:
-        if node.left is None:
-            return node
-        else:
-            return find_delete_replacement(node.left, first_itteration=False, left=False)   
-    
+       
 # Get the min value in a tree
-def get_min(root): 
-    while root.left is not None: 
-        root = root.left  
-    return root  
+def get_min(node):
+    while node.left is not None:
+        node = node.left
+    return node
  
-# Remove a node from a tree   
-def remove(root, key): 
-    if root is None: 
-        return root
-    if key < root.key: 
-        root.left = remove(root.left, key) 
-    elif(key > root.key): 
-        root.right = remove(root.right, key) 
+# Remove a node from a tree 
+def remove(node, key): 
+
+    if node is None: 
+        return node
+    if key < node.key: 
+        node.left = remove(node.left, key) 
+    elif(key > node.key): 
+        node.right = remove(node.right, key) 
     else: 
-        if root.left is None : 
-            temp = root.right  
-            root = None 
+        if node.left is None : 
+            temp = node.right  
+            node = None 
             return temp  
-        elif root.right is None : 
-            temp = root.left  
-            root = None
+        elif node.right is None : 
+            temp = node.left  
+            node = None
             return temp 
-        temp = get_min(root.right) 
-        root.value = temp.value
-        root.right = remove(root.right , temp.key) 
-    return root 
+            
+        temp = get_min(node.right) 
+        node.value = temp.value
+        node.key = temp.key
+        node.right = remove(node.right, temp.key) 
     
-# Update the height and balance of a subtree
+    node = set_heights_balance_remove(node)
+    return node 
+    
+# Update the height and balance after removing
+def set_heights_balance_remove(node): 
+    node.height = tree_height(node)
+    left_height = 0
+    right_height = 0
+    if node.left is not None:
+        node.left = set_heights_balance(node.left)
+        left_height = node.left.height
+    if node.right is not None:
+        node.right = set_heights_balance(node.right)
+        right_height = node.right.height
+    
+    # Set the balance here
+    node.balance = left_height-right_height
+    key = node.key
+    
+    # Rotation added here if the balance is off
+    balance = node.balance
+    
+    # Left Left
+    if balance > 1 and 0 <= node.left.balance: 
+        node = rotate_right(node)
+        set_heights_balance_remove(node)
+        
+    # Right Right 
+    elif balance < -1 and 0 >= node.right.balance:
+        node = rotate_left(node)
+        set_heights_balance_remove(node)
+  
+    # Left Right
+    elif balance > 1 and 0 < node.left.balance:
+        node.left = rotate_left(node.left) 
+        node = rotate_right(node)
+        set_heights_balance_remove(node)
+  
+    # Right Left
+    elif balance < -1 and 0 > node.right.balance:
+        node.right = rotate_right(node.right)
+        node = rotate_left(node)
+        set_heights_balance_remove(node)
+        
+    return node
+
+# Update the height and balance after inserting
 def set_heights_balance(node): 
     node.height = tree_height(node)
     left_height = 0
@@ -138,18 +170,18 @@ def set_heights_balance(node):
         set_heights_balance(node)
         
     # Right Right 
-    if balance < -1 and key > node.right.key:
+    elif balance < -1 and key > node.right.key:
         node = rotate_left(node)
         set_heights_balance(node)
   
     # Left Right
-    if balance > 1 and key > node.left.key:
+    elif balance > 1 and key > node.left.key:
         node.left = rotate_left(node.left) 
         node = rotate_right(node)
         set_heights_balance(node)
   
     # Right Left
-    if balance < -1 and key < node.right.key:
+    elif balance < -1 and key < node.right.key:
         node.right = rotate_right(node.right)
         node = rotate_left(node)
         set_heights_balance(node)
@@ -179,23 +211,25 @@ def rotate_right(node):
     node.height = tree_height(node) 
     left_child.height = tree_height(left_child)
     return left_child     
-      
-# Testing the code here   
+       
+# Set Up stuff
 root = None
-root = put(root, 5,'apple')
-level_order(root)
-root = put(root, 3,'orange')
-level_order(root)
-root = put(root, 2,'pineapple')
-level_order(root)
-root = put(root, 9,'lemon')
-level_order(root)
-root = put(root, 1,'lime')
-level_order(root)
-root = put(root, 7,'watermelon')
-level_order(root)
-root = put(root, 0,'mango')
-level_order(root)
-get(root, 5)
-get(root, 6)
-get(root, 7)
+num_commands = int(input())
+
+# Run ech command   
+for c in range(num_commands):
+    
+    # Get the command and arguments
+    line = input().rstrip("\n")
+    command_split = line.split(" ")
+    command = command_split[0]
+    
+    # Run the specified command
+    if command == "put":
+        root = put(root, int(command_split[1]), command_split[2])
+    elif command == "levelorder":
+        level_order(root)
+    elif command == "get":
+        get(root, int(command_split[1]))
+    elif command == "remove":
+        root = remove(root, int(command_split[1]))
