@@ -66,7 +66,7 @@ genres = [
     
 pages_per_genre = 100
 lines = 0
-csv = open("../data/idbm.csv", "w+")
+csv = open("../data/imdb.csv", "w+")
 csv.write("genre,title,rating,year,description\r\n")
 
 for genre in genres:
