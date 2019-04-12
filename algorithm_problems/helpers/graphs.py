@@ -2,7 +2,6 @@
 
 import sys
 
-
 def find_path(graph, start, end, path=None):
     if path is None:
         path = []
