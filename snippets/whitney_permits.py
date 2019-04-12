@@ -124,5 +124,6 @@ browser.close()
 final = "A total of " + str(total_avaliable) + " permits are avaliable."
 print(final)
 results = final + "\n\n" + results 
+results = results + "https://www.recreation.gov/permits/233260"
 if total_avaliable > 0:
     gmail.send(os.environ.get("my_icloud"), "Mt. Whitney Permits Avaliable", results)
