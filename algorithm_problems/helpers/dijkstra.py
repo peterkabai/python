@@ -106,23 +106,24 @@ def dijkstra_shortest_path(graph, start, finish):
         return None, None
     return shortest_paths[finish], path_distance
     
-# Create a graph and add all nodes, and all edges
-graph = Graph()
-graph.add(Node("A", [Edge("B",3), Edge("D",3), Edge("G",1)]))
-graph.add(Node("B", [Edge("A",3), Edge("C",5)]))
-graph.add(Node("C", [Edge("B",5), Edge("E",6), Edge("F",4), Edge("H",2)]))
-graph.add(Node("D", [Edge("A",3), Edge("F",7)]))
-graph.add(Node("E", [Edge("C",6)]))
-graph.add(Node("F", [Edge("C",4), Edge("D",7), Edge("G",8), Edge("H",1)]))
-graph.add(Node("G", [Edge("A",1), Edge("F",8), Edge("H",4)]))
-graph.add(Node("H", [Edge("C",2), Edge("F",1), Edge("G",4)]))
-graph.add(Node("Z", [Edge("Y",2)]))
-graph.add(Node("Y", [Edge("Z",2)]))
+if __name__ == '__main__':
+    # Create a graph and add all nodes, and all edges
+    graph = Graph()
+    graph.add(Node("A", [Edge("B",3), Edge("D",3), Edge("G",1)]))
+    graph.add(Node("B", [Edge("A",3), Edge("C",5)]))
+    graph.add(Node("C", [Edge("B",5), Edge("E",6), Edge("F",4), Edge("H",2)]))
+    graph.add(Node("D", [Edge("A",3), Edge("F",7)]))
+    graph.add(Node("E", [Edge("C",6)]))
+    graph.add(Node("F", [Edge("C",4), Edge("D",7), Edge("G",8), Edge("H",1)]))
+    graph.add(Node("G", [Edge("A",1), Edge("F",8), Edge("H",4)]))
+    graph.add(Node("H", [Edge("C",2), Edge("F",1), Edge("G",4)]))
+    graph.add(Node("Z", [Edge("Y",2)]))
+    graph.add(Node("Y", [Edge("Z",2)]))
 
-# Shortest path between start and finish using Dijkstra's meathod
-print(dijkstra_shortest_path(graph, "A", "A"))
-print(dijkstra_shortest_path(graph, "A", "F"))
-print(dijkstra_shortest_path(graph, "A", "H"))
-print(dijkstra_shortest_path(graph, "H", "A"))
-print(dijkstra_shortest_path(graph, "A", "E"))
-print(dijkstra_shortest_path(graph, "A", "Z"))
+    # Shortest path between start and finish using Dijkstra's meathod
+    print(dijkstra_shortest_path(graph, "A", "A"))
+    print(dijkstra_shortest_path(graph, "A", "F"))
+    print(dijkstra_shortest_path(graph, "A", "H"))
+    print(dijkstra_shortest_path(graph, "H", "A"))
+    print(dijkstra_shortest_path(graph, "A", "E"))
+    print(dijkstra_shortest_path(graph, "A", "Z"))
