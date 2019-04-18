@@ -24,10 +24,10 @@ class Node():
         self.edges.sort()
 
     def __gt__(self, other):
-        return self.distance > other.distance
+        return self.estimate + self.distance > other.estimate + other.distance
 
     def __lt__(self, other):
-        return self.distance < other.distance
+        return self.estimate + self.distance < other.estimate + other.distance
 
 class Graph():
     def __init__(self):
@@ -50,9 +50,8 @@ class Graph():
 
 def a_star_grid(graph, start, finish):
 
-    end_row = finish.split(" ")[0]
-    end_col = finish.split(" ")[1]
-    print(end_row, end_col)
+    end_row = int(finish.split(" ")[0])
+    end_col = int(finish.split(" ")[1])
 
     # Return right away  if the start is the finish
     if start == finish:
@@ -81,6 +80,12 @@ def a_star_grid(graph, start, finish):
                 # Update the distance, if lower than previously
                 if graph[edge.to].distance > current.distance + edge.cost:
                     graph[edge.to].distance = current.distance + edge.cost
+
+                    # New for A*
+                    name = graph[edge.to].name
+                    r = int(name.split(" ")[0])
+                    c = int(name.split(" ")[1])
+                    graph[edge.to].estimate = abs(end_row-r) + abs(end_col-c)
 
                     # Store the new shortest path for the node 
                     shortest_paths[edge.to] = list(shortest_paths[current.name])
@@ -121,3 +126,4 @@ if __name__ == '__main__':
  
     # Run A* on the grid
     a_star_grid(graph, start, end)
+    print(a_star_grid(graph, start, end)[1])
