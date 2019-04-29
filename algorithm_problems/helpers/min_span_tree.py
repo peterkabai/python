@@ -20,14 +20,11 @@ def edges_to_dict(edges, directed=True):
         graph[edge[0][0]].append((edge[0][1],edge[1]))
         
         if not directed:
-            if edge[0][1] not in graph.keys():
-                graph[edge[0][1]] = []
             graph[edge[0][1]].append((edge[0][0],edge[1]))   
             
     return graph
 
 def bfs_cycle_detect(graph, start):
-       
     if len(graph) == 0:
         return False
 
@@ -43,24 +40,25 @@ def bfs_cycle_detect(graph, start):
         current = queue.pop(0)
         
         # For all neighbors of the current node 
-        for neighbor in graph[current[0]]:
+        for neighbor in graph[current]:
             
             # If we haven't seen it before
-            if neighbor not in visited:
+            if neighbor[0] not in visited:
                 
                 # Add to the back of the queue 
                 # And to the queue of visited nodes
-                queue.append(neighbor)
-                visited.append(neighbor) 
-            else: 
+                queue.append(neighbor[0])
+                visited.append(neighbor[0]) 
+            else:
                 return True
     return False
     
-def min_span_tree(edges):
-    graph = edges_to_dict(edges)
+def min_span_tree(edges, directed=True):
+    graph = edges_to_dict(edges, directed)
     edges = sorted(edges, key=lambda x: x[1])
     min_tree, output, length = [], [], 0
-    while len(min_tree) <= count_v(edges):
+    v = count_v(edges)
+    while len(min_tree) < v-1:
         next_v = edges[0]
         if next_v not in min_tree:
             temp = min_tree[:]
@@ -105,5 +103,3 @@ edges_2 = [
 ]
 pairs, length = min_span_tree(edges_1)
 print(length, pairs)
-
-
