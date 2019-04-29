@@ -23,6 +23,21 @@ def coin_itterative(coins, total):
     
     return combinations[total]
 
+
+
+def coin_recursive(coins, total):
+    combinations = [0] * (total + 1)
+    combinations = coin_recursive(coins, combinations, total)
+    return combinations[-1]
+
+
+
+def coin_recursive_util(coins, combinations, index):
+    print("Not yet implimented")
+    combinations[index] = 
+    return combinations
+
+
 # Read the input
 total = int(input())
 num_coins = int(input())
